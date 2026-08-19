@@ -1,0 +1,72 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { ArrowUpRight, ChevronDown, Code2, ExternalLink, Instagram, Mail, Menu, MessageCircle, Monitor, PanelTop, Settings2, Sparkles, X, Zap } from "lucide-react";
+import { faqs, processSteps, projects, services, siteConfig, testimonials, type Project } from "@/lib/data";
+
+const iconMap = { web: Monitor, system: Settings2, landing: PanelTop, automation: Zap, maintenance: Code2 };
+
+export default function Portfolio() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [formState, setFormState] = useState({ name: "", email: "", whatsapp: "", service: "", message: "" });
+  const [formError, setFormError] = useState("");
+  const [isOpening, setIsOpening] = useState(false);
+
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") { setSelectedProject(null); setMenuOpen(false); } };
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, []);
+
+  const goTo = (id: string) => { setMenuOpen(false); document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); };
+  const updateForm = (key: keyof typeof formState, value: string) => setFormState((current) => ({ ...current, [key]: value }));
+  const submitForm = (event: React.FormEvent) => {
+    event.preventDefault();
+    const { name, email, whatsapp, service, message } = formState;
+    if (!name || !email || !whatsapp || !service || !message) { setFormError("Preencha todos os campos para continuar."); return; }
+    setFormError(""); setIsOpening(true);
+    const text = `Olá, Agatha! Encontrei seu portfólio e gostaria de conversar sobre um projeto.\n\n*Nome:* ${name}\n\n*E-mail:* ${email}\n\n*WhatsApp:* ${whatsapp}\n\n*Serviço de interesse:* ${service}\n\n*Mensagem:*\n${message}`;
+    window.setTimeout(() => { window.open(`https://wa.me/${siteConfig.whatsapp}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer"); setIsOpening(false); }, 350);
+  };
+
+  return <main>
+    <nav className="navbar" aria-label="Navegação principal">
+      <button className="brand" onClick={() => goTo("inicio")} aria-label="Voltar ao início"><span className="brand-mark">AP</span><span><strong>AGATHA PINHEIRO</strong><small>DESENVOLVIMENTO WEB</small></span></button>
+      <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? "Fechar menu" : "Abrir menu"} aria-expanded={menuOpen}>{menuOpen ? <X /> : <Menu />}</button>
+      <div className={`nav-links ${menuOpen ? "is-open" : ""}`}>{[["Início", "inicio"], ["Sobre", "sobre"], ["Serviços", "servicos"], ["Processo", "processo"], ["Projetos", "projetos"], ["Experiências", "experiencias"], ["FAQ", "faq"], ["Contato", "contato"]].map(([label, id]) => <button key={id} onClick={() => goTo(id)}>{label}</button>)}</div>
+    </nav>
+
+    <section className="hero" id="inicio">
+      <div className="hero-orbit orbit-one" /><div className="hero-orbit orbit-two" />
+      <div className="hero-copy reveal"><p className="eyebrow"><span /> Sistemas · Automações · Soluções</p><h1>Agatha<br /><em>Pinheiro</em></h1><p className="hero-role">Desenvolvimento web</p><p className="hero-slogan">Tecnologia feita para impulsionar negócios.</p><p className="hero-description">Transformo necessidades reais em soluções digitais funcionais, modernas e personalizadas para negócios.</p><div className="hero-actions"><button className="button button-gold" onClick={() => goTo("projetos")}>Ver projetos <ArrowUpRight size={16} /></button><button className="button button-line" onClick={() => goTo("contato")}>Fale comigo</button></div></div>
+      <div className="hero-portrait reveal"><div className="portrait-ring"><div className="portrait-placeholder"><span>AP</span><small>imagem oficial<br />da marca</small></div></div><div className="portrait-caption">assinatura visual<br /><b>AP · 2026</b></div></div>
+      <div className="scroll-note">role para explorar <span>↓</span></div>
+    </section>
+
+    <section className="about section" id="sobre"><div className="section-label">01 / Sobre</div><div className="about-grid"><div><p className="eyebrow">Sobre mim</p><h2>Tecnologia com propósito, estratégia e atenção aos detalhes.</h2></div><div className="about-text"><p>Sou Agatha Pinheiro, desenvolvedora web freelancer. Meu trabalho nasce da vontade de transformar problemas reais em experiências digitais mais claras, funcionais e alinhadas a cada negócio.</p><p>Atuo com desenvolvimento web, criação de sistemas, automações e soluções personalizadas, acompanhando cada etapa com proximidade e cuidado.</p><div className="signature">Agatha Pinheiro <span>desenvolvimento com intenção</span></div></div></div></section>
+
+    <section className="services section section-dark" id="servicos"><div className="section-label">02 / O que eu faço</div><div className="section-heading"><div><p className="eyebrow">Serviços</p><h2>Soluções que fazem sentido para o seu momento.</h2></div><p>Do primeiro rascunho à entrega, cada escolha tem um motivo: facilitar, organizar e impulsionar.</p></div><div className="service-grid">{services.map((service) => { const Icon = iconMap[service.icon as keyof typeof iconMap]; return <article className="service-card" key={service.number}><div className="card-top"><span>{service.number}</span><Icon size={22} strokeWidth={1.4} /></div><h3>{service.title}</h3><p>{service.description}</p><span className="card-arrow">↗</span></article>; })}</div></section>
+
+    <section className="process section" id="processo"><div className="section-label">03 / Como funciona</div><div className="process-intro"><p className="eyebrow">Processo de trabalho</p><h2>Clareza em cada etapa.</h2></div><div className="process-grid">{processSteps.map(([number, title, text]) => <article key={number}><span className="process-number">{number}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}</div></section>
+
+    <section className="projects section section-dark" id="projetos"><div className="section-label">04 / Projetos selecionados</div><div className="section-heading"><div><p className="eyebrow">Projetos</p><h2>Ideias que estão ganhando forma.</h2></div><p>Cases preparados para receber a história, as imagens e as decisões reais de cada projeto.</p></div><div className="project-grid">{projects.map((project, index) => <article className="project-card" key={project.id}><div className={`project-visual visual-${index + 1}`}><span className="visual-monogram">AP</span><span className="visual-index">0{index + 1}</span></div><div className="project-info"><p className="project-category">{project.category}</p><h3>{project.title}</h3><p>{project.shortDescription}</p><button className="text-link" onClick={() => setSelectedProject(project)}>Ver projeto <ArrowUpRight size={15} /></button></div></article>)}</div></section>
+
+    <section className="tech section" id="tecnologias"><div className="section-label">05 / Tecnologias</div><div className="tech-layout"><div><p className="eyebrow">Tecnologias</p><h2>Ferramentas para construir com precisão.</h2></div><div className="tech-list"><div><span>Front-end</span><p>HTML · CSS · JavaScript</p></div><div><span>Back-end</span><p>PHP · Java</p></div><div><span>Banco de dados</span><p>MySQL</p></div></div></div></section>
+
+    <section className="differentials section section-dark"><div className="section-label">06 / Diferenciais</div><div className="section-heading"><div><p className="eyebrow">Por que trabalhar comigo?</p><h2>Menos complicação.<br /><em>Mais intenção.</em></h2></div></div><div className="diff-grid">{[["01", "Soluções personalizadas", "Cada projeto é pensado de acordo com a necessidade."], ["02", "Atenção aos detalhes", "Design e funcionalidade trabalhando juntos."], ["03", "Visão de negócio", "A tecnologia deve resolver problemas reais."], ["04", "Experiência do usuário", "Interfaces claras e responsivas."]].map(([n, title, text]) => <article key={n}><span>{n}</span><Sparkles size={17} /><h3>{title}</h3><p>{text}</p></article>)}</div></section>
+
+    <section className="testimonials section" id="experiencias"><div className="section-label">07 / Experiências</div><div className="section-heading"><div><p className="eyebrow">Feedbacks</p><h2>O que dizem sobre o trabalho.</h2></div><p className="disclaimer">Depoimentos apresentados como conteúdo demonstrativo enquanto a base de clientes e feedbacks reais é construída.</p></div><div className="testimonial-grid">{testimonials.map(([label, text]) => <article key={label}><span className="quote">“</span><p>{text}</p><div><strong>{label}</strong><small>Cliente · Projeto demonstrativo</small></div></article>)}</div></section>
+
+    <section className="faq section section-dark" id="faq"><div className="section-label">08 / Perguntas frequentes</div><div className="faq-layout"><div><p className="eyebrow">FAQ</p><h2>Tem uma dúvida?</h2><p className="muted">Algumas respostas para ajudar você a dar o próximo passo.</p></div><div className="faq-list">{faqs.map(([question, answer], index) => <div className={`faq-item ${openFaq === index ? "open" : ""}`} key={question}><button onClick={() => setOpenFaq(openFaq === index ? null : index)} aria-expanded={openFaq === index}><span>{question}</span><ChevronDown size={18} /></button><div className="faq-answer"><p>{answer}</p></div></div>)}</div></div></section>
+
+    <section className="final-cta" id="cta"><div className="cta-orbit" /><div className="section-label">09 / Próximo passo</div><p className="eyebrow">Tem uma ideia?</p><h2>Vamos transformá-la<br /><em>em solução.</em></h2><p>Se você precisa de um site, sistema, automação ou solução digital personalizada, vamos conversar sobre o seu projeto.</p><button className="button button-gold" onClick={() => goTo("contato")}>Fale comigo <ArrowUpRight size={16} /></button></section>
+
+    <section className="contact section" id="contato"><div className="section-label">10 / Contato</div><div className="contact-grid"><div><p className="eyebrow">Vamos conversar?</p><h2>Conte um pouco sobre o que você precisa.</h2><p>Vamos entender juntos a melhor solução para o seu projeto.</p><div className="contact-links"><a href={`mailto:${siteConfig.email}`}><Mail size={17} /> {siteConfig.email}</a><a href={`https://wa.me/${siteConfig.whatsapp}`} target="_blank" rel="noreferrer"><MessageCircle size={17} /> +55 21 98710-3449</a><a href={siteConfig.instagramUrl} target="_blank" rel="noreferrer"><Instagram size={17} /> {siteConfig.instagram}</a></div></div><form onSubmit={submitForm} noValidate><div className="field-row"><label>Nome<input value={formState.name} onChange={(e) => updateForm("name", e.target.value)} placeholder="Como posso chamar você?" /></label><label>E-mail<input type="email" value={formState.email} onChange={(e) => updateForm("email", e.target.value)} placeholder="voce@email.com" /></label></div><div className="field-row"><label>WhatsApp<input value={formState.whatsapp} onChange={(e) => updateForm("whatsapp", e.target.value)} placeholder="(00) 00000-0000" /></label><label>Serviço<select value={formState.service} onChange={(e) => updateForm("service", e.target.value)}><option value="">Selecione</option>{services.map((service) => <option key={service.title}>{service.title}</option>)}</select></label></div><label>Mensagem<textarea value={formState.message} onChange={(e) => updateForm("message", e.target.value)} placeholder="Fale um pouco sobre a sua ideia..." rows={5} /></label>{formError && <p className="form-error" role="alert">{formError}</p>}<button className="button button-gold submit" type="submit">{isOpening ? "Abrindo WhatsApp..." : "Enviar mensagem"} <ArrowUpRight size={16} /></button><p className="form-note">Ao enviar, o WhatsApp será aberto para você revisar e enviar sua mensagem.</p></form></div></section>
+
+    <footer className="footer"><div className="footer-top"><button className="brand" onClick={() => goTo("inicio")}><span className="brand-mark">AP</span><span><strong>AGATHA PINHEIRO</strong><small>DESENVOLVIMENTO WEB</small></span></button><p>Tecnologia feita para<br />impulsionar negócios.</p></div><div className="footer-bottom"><div><span>© 2026 Agatha Pinheiro</span><span>Desenvolvimento Web</span></div><div className="footer-nav">{[["Início", "inicio"], ["Sobre", "sobre"], ["Projetos", "projetos"], ["Contato", "contato"]].map(([label, id]) => <button key={id} onClick={() => goTo(id)}>{label}</button>)}</div><a href={siteConfig.instagramUrl} target="_blank" rel="noreferrer" aria-label="Instagram de Agatha Pinheiro"><Instagram size={18} /></a></div></footer>
+
+    {selectedProject && <div className="modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelectedProject(null); }}><div className="project-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button className="modal-close" onClick={() => setSelectedProject(null)} aria-label="Fechar projeto"><X size={19} /></button><div className="modal-visual"><span>AP</span></div><div className="modal-content"><p className="eyebrow">{selectedProject.category}</p><h2 id="modal-title">{selectedProject.title}</h2><p>{selectedProject.description}</p><div className="modal-columns"><div><h4>O desafio</h4><p>{selectedProject.challenge}</p></div><div><h4>A solução</h4><p>{selectedProject.solution}</p></div></div><h4>Principais funcionalidades</h4><ul>{selectedProject.features.map((feature) => <li key={feature}>{feature}</li>)}</ul><div className="modal-footer"><span>{selectedProject.status}</span>{selectedProject.demoUrl && <a href={selectedProject.demoUrl} target="_blank" rel="noreferrer">Ver projeto <ExternalLink size={14} /></a>}{selectedProject.githubUrl && <a href={selectedProject.githubUrl} target="_blank" rel="noreferrer">GitHub <ExternalLink size={14} /></a>}</div></div></div></div>}
+  </main>;
+}
