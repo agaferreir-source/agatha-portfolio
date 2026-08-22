@@ -17,6 +17,9 @@ export const services = [
   { number: "03", icon: "landing", title: "Landing pages", description: "Páginas estratégicas para comunicar uma oferta e conduzir visitantes à ação." },
   { number: "04", icon: "automation", title: "Automações", description: "Soluções para reduzir tarefas manuais e tornar a operação mais fluida." },
   { number: "05", icon: "maintenance", title: "Manutenção e melhorias", description: "Correções, atualizações e evolução contínua para projetos já existentes." },
+  { number: "06", icon: "ai", title: "Inteligência Artificial & Integrações", description: "Implementação de inteligência artificial e integrações entre ferramentas para automatizar processos e tornar seu negócio mais inteligente." },
+  { number: "07", icon: "system", title: "Integrações de Sistemas", description: "Conexão entre plataformas, ferramentas e sistemas para centralizar informações e automatizar processos." },
+  { number: "08", icon: "web", title: "Consultoria e Soluções Digitais", description: "Análise das necessidades do negócio para definir estratégias e soluções digitais mais eficientes." },
 ];
 
 export const processSteps = [

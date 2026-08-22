@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ArrowUpRight, ChevronDown, Code2, ExternalLink, Instagram, Mail, Menu, MessageCircle, Monitor, PanelTop, Settings2, Sparkles, X, Zap } from "lucide-react";
 import { faqs, processSteps, projects, services, siteConfig, testimonials, type Project } from "@/lib/data";
 
-const iconMap = { web: Monitor, system: Settings2, landing: PanelTop, automation: Zap, maintenance: Code2 };
+const iconMap = { web: Monitor, system: Settings2, landing: PanelTop, automation: Zap, maintenance: Code2, ai: Sparkles };
 
 export default function Portfolio() {
   const [menuOpen, setMenuOpen] = useState(false);
